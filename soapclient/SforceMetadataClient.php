@@ -24,6 +24,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+require_once ('SoapClientTimeout.class.php');
 require_once ('SforceMetaObject.php');
 
 class SforceMetadataClient {
@@ -56,7 +57,11 @@ class SforceMetadataClient {
       'sessionId' => $loginResult->sessionId
       );
     }
-    $this->sforce = new SoapClient($wsdl,$soapClientArray);
+
+    $soapClientArray['connecttimeout'] = 5000; // 5s
+    $soapClientArray['timeout'] = 30000; // 30s
+
+    $this->sforce = new SoapClientTimeout($wsdl,$soapClientArray);
     //$this->sforce->__setSoapHeaders($header_array);
 
 

@@ -24,6 +24,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+require_once ('SoapClientTimeout.class.php');
 require_once ('SforceEmail.php');
 require_once ('SforceProcessRequest.php');
 require_once ('ProxySettings.php');
@@ -122,7 +123,10 @@ class SforceBaseClient {
             $soapClientArray = array_merge($soapClientArray, $proxySettings);
 		}
 
-		$this->sforce = new SoapClient($wsdl, $soapClientArray);
+		$soapClientArray['connecttimeout'] = 5000; // 5s
+		$soapClientArray['timeout'] = 10000; // 10s
+
+		$this->sforce = new SoapClientTimeout($wsdl, $soapClientArray);
 		return $this->sforce;
 	}
 
@@ -1005,6 +1009,8 @@ class SObject {
 						if (sizeof($anArray) > 0) {
 							// To add more variables to the the top level sobject
 							foreach ($anArray as $key=>$children_sobject) {
+								if (!isset($this->fields))
+								    $this->fields = new stdClass();
 								$this->fields->$key = $children_sobject;
 							}
 							//array_push($this->fields, $anArray);
