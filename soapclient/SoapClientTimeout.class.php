@@ -9,6 +9,7 @@ class SoapClientTimeout extends SoapClient
 	private $timeout = 0;
 	private $connecttimeout = 0;
 	private $sslverifypeer = true;
+	private $ipresolve = null;
 
 	public function __construct($wsdl, $options) {
 		//"POP" our own defined options from the $options array before we call our parent constructor
@@ -24,6 +25,10 @@ class SoapClientTimeout extends SoapClient
 		if (isset($options['sslverifypeer'])) {
 			$this->__setSSLVerifyPeer($options['sslverifypeer']);
 			unset($options['sslverifypeer']);
+		}
+		if (isset($options['ipresolve'])) {
+			$this->__setIpResolve($options['ipresolve']);
+			unset($options['ipresolve']);
 		}
 		//Now call parent constructor
 		parent::__construct($wsdl, $options);
@@ -48,6 +53,14 @@ class SoapClientTimeout extends SoapClient
 			throw new Exception("Invalid connecttimeout value");
 
 		$this->connecttimeout = $connecttimeoutms;
+	}
+
+	public function __setIpResolve($ipresolve)
+	{
+		if (!in_array($ipresolve, array(CURL_IPRESOLVE_WHATEVER, CURL_IPRESOLVE_V4, CURL_IPRESOLVE_V6)))
+			throw new Exception("Invalid ipresolve value, must be one of CURL_IPRESOLVE_WHATEVER, CURL_IPRESOLVE_V4 or CURL_IPRESOLVE_V6");
+
+		$this->ipresolve = $ipresolve;
 	}
 
 	public function __getConnectTimeout()
@@ -112,6 +125,9 @@ class SoapClientTimeout extends SoapClient
 					$options[CURLOPT_CONNECTTIMEOUT] = ceil($this->connecttimeout/1000);
 				}
 			}
+
+			if ($this->ipresolve !== null)
+				$options[CURLOPT_IPRESOLVE] = $this->ipresolve;
 
 			if (curl_setopt_array($curl, $options) === false)
 				throw new Exception('Failed setting CURL options');

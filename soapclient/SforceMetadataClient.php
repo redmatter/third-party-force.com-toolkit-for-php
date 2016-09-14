@@ -61,6 +61,10 @@ class SforceMetadataClient {
     $soapClientArray['connecttimeout'] = 5000; // 5s
     $soapClientArray['timeout'] = 30000; // 30s
 
+    // Salesforce doesn't seem to support IPv6, so force IPv4 for now.
+    // @see PLAT-8735
+    $soapClientArray['ipresolve'] = CURL_IPRESOLVE_V4;
+
     $this->sforce = new SoapClientTimeout($wsdl,$soapClientArray);
     //$this->sforce->__setSoapHeaders($header_array);
 
