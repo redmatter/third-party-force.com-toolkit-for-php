@@ -135,7 +135,7 @@ class SoapClientTimeout extends SoapClient
 			$response = curl_exec($curl);
 
 			if (curl_errno($curl))
-				throw new Exception(curl_error($curl));
+				throw new Exception("curl error: [" . curl_error($curl) . "]; location: [${location}]");
 
 			curl_close($curl);
 		}
