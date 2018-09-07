@@ -3852,7 +3852,7 @@ All Rights Reserved
                     <element name="active" type="xsd:boolean"/>
                     <element name="defaultValue" type="xsd:boolean"/>
                     <element name="label" type="xsd:string" nillable="true"/>
-                    <element name="validFor" type="xsd:base64Binary" minOccurs="0"/>
+                    <element name="validFor" type="xsd:string" minOccurs="0"/>
                     <element name="value" type="xsd:string"/>
                 </sequence>
             </complexType>
