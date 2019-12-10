@@ -124,7 +124,7 @@ class SforceBaseClient {
 		}
 
 		$soapClientArray['connecttimeout'] = 5000; // 5s
-		$soapClientArray['timeout'] = 10000; // 10s
+		$soapClientArray['timeout'] = 20000; // 20s - increased timeout seconds @see AVS-1213
 
 		// Salesforce doesn't seem to support IPv6, so force IPv4 for now.
 		// @see PLAT-8735
